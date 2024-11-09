@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pets</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      div {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .box {
+        height: 45vh;
+      }
+
+      h1 {
+        font-size: 25px;
+        margin: 10px;
+      }
+
+      button {
+        margin: 10px;
+        padding: 10px;
+        background-color: orange;
+        color: black;
+        font-size: large;
+        border-radius: 10px;
+      }
+
+      p {
+        margin: 10px;
+        font-weight: 500;
+      }
+
+      img {
+        height: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="box">
+        <h1>Get random cat facts</h1>
+        <button id="btn1">Meow Meow!</button>
+        <p id="loading-cat" style="display: none">🐈🐈🐈...</p>
+        <p id="cat-result"></p>
+      </div>
+      <div class="box">
+        <h1>Get random dog images</h1>
+        <button id="btn2">Bhaw Bhaw!</button>
+        <p id="loading-dog" style="display: none">🐕🐕🐕...</p>
+        <img src="" id="dog-result" />
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+    <script>
+      let btn1 = document.querySelector("#btn1");
+      let url1 = "https://catfact.ninja/fact";
+
+      btn1.addEventListener("click", async () => {
+        let p = document.querySelector("#cat-result");
+        let loadingText = document.querySelector("#loading-cat");
+        loadingText.style.display = "block"; // Show loading text
+        p.innerText = ""; // Clear previous result
+        let fact = await getFacts();
+        loadingText.style.display = "none"; // Hide loading text
+        p.innerText = fact;
+      });
+
+      async function getFacts() {
+        try {
+          let res = await axios.get(url1);
+          return res.data.fact;
+        } catch (e) {
+          console.log("error : ", e);
+          return "No Fact Found 😿";
+        }
+      }
+
+      let btn2 = document.querySelector("#btn2");
+      let url2 = "https://dog.ceo/api/breeds/image/random";
+
+      btn2.addEventListener("click", async () => {
+        let img = document.querySelector("#dog-result");
+        let loadingText = document.querySelector("#loading-dog");
+        loadingText.style.display = "block"; // Show loading text
+        img.setAttribute("src", ""); // Clear previous image
+        let link = await getImage();
+        loadingText.style.display = "none"; // Hide loading text
+        img.setAttribute("src", link);
+      });
+
+      async function getImage() {
+        try {
+          let res = await axios.get(url2);
+          return res.data.message; // seen by console.log(res); - getImage();
+        } catch (e) {
+          console.log("error : ", e);
+          return "No Image Found 🐶";
+        }
+      }
+    </script>
+  </body>
+</html>
